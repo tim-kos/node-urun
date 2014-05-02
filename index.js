@@ -3,11 +3,8 @@ var FileFinder   = require('./lib/FileFinder');
 var Runner       = require('./lib/Runner');
 
 module.exports = function(dir, options) {
-  var options  = options || {};
-  var include  = options.include || /test-.+\.js$/;
-  var verbose  = options.verbose;
-  if (verbose !== true) verbose = false;
-
+  options  = options || {};
+  var include  = options.include  || /test-.+\.js$/;
   var Reporter = require('./lib/reporter/'
     + (process.env.REPORTER || options.reporter || 'BashReporter'));
 
@@ -19,8 +16,9 @@ module.exports = function(dir, options) {
 
     files = filter.filter(files);
 
-    var runner   = new Runner({files: files});
-    var reporter = new Reporter({runner: runner, verbose: verbose});
+    options.files = files;
+    var runner   = new Runner(options);
+    var reporter = new Reporter({runner: runner});
     runner.execute();
   });
 };
